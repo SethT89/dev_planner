@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<!-- saved from url=(0053)file:///Users/seththomas/Downloads/dev_planner_3.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Dev Planner</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -170,6 +170,8 @@ body{font-family:var(--f);color:var(--t1);display:flex;flex-direction:column;hei
 .pl-menu-item{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;font-size:13px;color:var(--t1);cursor:pointer;border-radius:6px;border:none;background:transparent;font-family:var(--f);text-align:left;}
 .pl-menu-item:hover{background:var(--bg2);}
 .pl-menu-item svg{opacity:0.5;flex-shrink:0;}
+.pl-menu-item .pl-menu-shortcut{margin-left:auto;font-size:11px;color:var(--t3);padding-left:16px;}
+.pl-menu-item.disabled{opacity:0.35;pointer-events:none;}
 </style>
 </head>
 <body>
@@ -189,11 +191,11 @@ body{font-family:var(--f);color:var(--t1);display:flex;flex-direction:column;hei
 <div id="set-modal" class="modal-overlay">
  <div class="modal-box">
   <h2>Settings</h2>
-  <div class="set-field"><div class="set-label">Sprints</div><input class="set-inp" id="si-sprints" type="number" min="1" max="24"></div>
-  <div class="set-field"><div class="set-label">Weeks per sprint</div><input class="set-inp" id="si-weeks" type="number" min="1" max="8"></div>
-  <div class="set-field"><div class="set-label">Start date</div><input class="set-inp" id="si-start" type="date"></div>
-  <div class="set-field"><div class="set-label">Developers</div><input class="set-inp" id="si-devs" type="number" min="1" max="30"></div>
-  <div class="set-field"><div class="set-label">Points per dev per sprint</div><input class="set-inp" id="si-ppd" type="number" min="1" max="40"></div>
+  <div class="set-field"><div class="set-label">Sprints</div><input class="set-inp" id="si-sprints" type="number" min="1" max="24"/></div>
+  <div class="set-field"><div class="set-label">Weeks per sprint</div><input class="set-inp" id="si-weeks" type="number" min="1" max="8"/></div>
+  <div class="set-field"><div class="set-label">Start date</div><input class="set-inp" id="si-start" type="date"/></div>
+  <div class="set-field"><div class="set-label">Developers</div><input class="set-inp" id="si-devs" type="number" min="1" max="30"/></div>
+  <div class="set-field"><div class="set-label">Points per dev per sprint</div><input class="set-inp" id="si-ppd" type="number" min="1" max="40"/></div>
   <div class="modal-actions">
    <button id="set-cancel">Cancel</button>
    <button id="set-save">Save</button>
@@ -203,251 +205,23 @@ body{font-family:var(--f);color:var(--t1);display:flex;flex-direction:column;hei
 
 <div id="app">
  <div id="pl">
-  <div id="pl-head">
-  <span class="pl-title" id="pl-plan-title" contenteditable="true" spellcheck="false">Dev Planner</span>
-  <div class="pl-kpis">
-   <span class="pl-kpi">Capacity: <b>32 pts/sprint</b></span>
-   <span class="pl-kpi">Scope: <b>125 pts</b></span>
-   <span class="pl-kpi">6 sprints • 4 devs • 8 pts/dev</span>
-   <span class="pl-warn">⚠ 1 sprint over capacity</span>
-  </div>
-  <button class="pl-hbtn" id="pl-menu-btn" title="Menu">⋮</button></div>
-  <div id="pl-cw"><div id="pl-canvas" style="min-width: 1494px;">
-   <div id="pl-sh" style="min-width: 1494px;"><div class="pl-hg" style="width:220px;min-width:220px;padding:0;"><button id="pl-addbtn" style="margin:0 12px;font-size:12px;padding:4px 10px;border:0.5px dashed var(--bd2);background:transparent;color:var(--t2);cursor:pointer;border-radius:var(--r1);font-family:var(--f);white-space:nowrap;">+ Add project</button></div><div class="pl-sc2" style="width:212px;min-width:212px;">
-   <div class="pl-sn">Sprint 1</div><div class="pl-sd">Apr 7</div>
-   <div class="pl-qtick" style="left:53px;opacity:.4;"></div>
-   <div class="pl-qtick" style="left:106px;opacity:.7;"></div>
-   <div class="pl-qtick" style="left:159px;opacity:.4;"></div>
-  </div><div class="pl-sc2" style="width:212px;min-width:212px;">
-   <div class="pl-sn">Sprint 2</div><div class="pl-sd">Apr 21</div>
-   <div class="pl-qtick" style="left:53px;opacity:.4;"></div>
-   <div class="pl-qtick" style="left:106px;opacity:.7;"></div>
-   <div class="pl-qtick" style="left:159px;opacity:.4;"></div>
-  </div><div class="pl-sc2" style="width:212px;min-width:212px;background:var(--bgd);">
-   <div class="pl-sn">Sprint 3</div><div class="pl-sd">May 5</div>
-   <div class="pl-qtick" style="left:53px;opacity:.4;"></div>
-   <div class="pl-qtick" style="left:106px;opacity:.7;"></div>
-   <div class="pl-qtick" style="left:159px;opacity:.4;"></div>
-  </div><div class="pl-sc2" style="width:212px;min-width:212px;">
-   <div class="pl-sn">Sprint 4</div><div class="pl-sd">May 19</div>
-   <div class="pl-qtick" style="left:53px;opacity:.4;"></div>
-   <div class="pl-qtick" style="left:106px;opacity:.7;"></div>
-   <div class="pl-qtick" style="left:159px;opacity:.4;"></div>
-  </div><div class="pl-sc2" style="width:212px;min-width:212px;">
-   <div class="pl-sn">Sprint 5</div><div class="pl-sd">Jun 2</div>
-   <div class="pl-qtick" style="left:53px;opacity:.4;"></div>
-   <div class="pl-qtick" style="left:106px;opacity:.7;"></div>
-   <div class="pl-qtick" style="left:159px;opacity:.4;"></div>
-  </div><div class="pl-sc2" style="width:212px;min-width:212px;">
-   <div class="pl-sn">Sprint 6</div><div class="pl-sd">Jun 16</div>
-   <div class="pl-qtick" style="left:53px;opacity:.4;"></div>
-   <div class="pl-qtick" style="left:106px;opacity:.7;"></div>
-   <div class="pl-qtick" style="left:159px;opacity:.4;"></div>
-  </div></div>
-   <div id="pl-rows" style="overflow-y: hidden;"><div id="pl-drop-line"></div><div class="pl-row" data-pid="1" style="flex: 134 0 0px; min-height: 20px;">
-   <div class="pl-rg" style="width:220px;min-width:220px;">
-    <div class="pl-dh" data-id="1"><div class="pl-gripicon"><div class="pl-gripdot"></div><div class="pl-gripdot"></div><div class="pl-gripdot"></div></div></div>
-    <div class="proj-color-bar" data-pid="1" style="width:10px;flex-shrink:0;background:#F97316;opacity:.75;cursor:pointer;transition:opacity .1s;" title="Change color"></div>
-    <div class="pl-rc">
-     <div class="pl-rn" contenteditable="true" data-id="1" spellcheck="false">Account Merger</div>
-     <div class="pl-rs">
-      <span class="pl-pill" style="font-weight:500;color:var(--t1);">24 pts</span>
-      <button class="pl-add-blk" data-pid="1">+ block</button>
-     </div>
-    </div>
-    <button class="pl-del" data-id="1">×</button>
-   </div>
-   <div class="pl-rt"><div class="pl-cell" style="left:0px;width:53px;" data-sq="0" data-pid="1"></div><div class="pl-cell" style="left:53px;width:53px;" data-sq="1" data-pid="1"></div><div class="pl-cell" style="left:106px;width:53px;" data-sq="2" data-pid="1"></div><div class="pl-cell bound" style="left:159px;width:53px;" data-sq="3" data-pid="1"></div><div class="pl-cell" style="left:212px;width:53px;" data-sq="4" data-pid="1"></div><div class="pl-cell" style="left:265px;width:53px;" data-sq="5" data-pid="1"></div><div class="pl-cell" style="left:318px;width:53px;" data-sq="6" data-pid="1"></div><div class="pl-cell bound" style="left:371px;width:53px;" data-sq="7" data-pid="1"></div><div class="pl-cell" style="left:424px;width:53px;" data-sq="8" data-pid="1"></div><div class="pl-cell" style="left:477px;width:53px;" data-sq="9" data-pid="1"></div><div class="pl-cell" style="left:530px;width:53px;" data-sq="10" data-pid="1"></div><div class="pl-cell bound" style="left:583px;width:53px;" data-sq="11" data-pid="1"></div><div class="pl-cell" style="left:636px;width:53px;" data-sq="12" data-pid="1"></div><div class="pl-cell" style="left:689px;width:53px;" data-sq="13" data-pid="1"></div><div class="pl-cell" style="left:742px;width:53px;" data-sq="14" data-pid="1"></div><div class="pl-cell bound" style="left:795px;width:53px;" data-sq="15" data-pid="1"></div><div class="pl-cell" style="left:848px;width:53px;" data-sq="16" data-pid="1"></div><div class="pl-cell" style="left:901px;width:53px;" data-sq="17" data-pid="1"></div><div class="pl-cell" style="left:954px;width:53px;" data-sq="18" data-pid="1"></div><div class="pl-cell bound" style="left:1007px;width:53px;" data-sq="19" data-pid="1"></div><div class="pl-cell" style="left:1060px;width:53px;" data-sq="20" data-pid="1"></div><div class="pl-cell" style="left:1113px;width:53px;" data-sq="21" data-pid="1"></div><div class="pl-cell" style="left:1166px;width:53px;" data-sq="22" data-pid="1"></div><div class="pl-cell bound" style="left:1219px;width:53px;" data-sq="23" data-pid="1"></div><div class="pl-blk" style="left:0px;top:15px;width:212px;height:104px;background:rgba(249,115,22,0.1);border:0.5px solid rgba(249,115,22,0.5);" data-act="move" data-bid="2" data-pid="1">
-    <div class="pl-rhl" data-act="resize-l" data-bid="2" data-pid="1"><div class="pl-grip"></div></div>
-    <div class="pl-bb" data-act="open-edit" data-bid="2"><div class="pl-bn" style="color:#F97316;">Assets &amp; Devices</div><div class="pl-bsub" style="color:var(--t1);font-weight:500;">16 pts</div><div class="pl-bsub" style="color:var(--t2);">2 devs</div></div>
-    <div class="pl-rhr" data-act="resize-r" data-bid="2" data-pid="1"><div class="pl-grip"></div></div>
-   </div><div class="pl-blk" style="left:212px;top:15px;width:212px;height:52px;background:rgba(249,115,22,0.1);border:0.5px solid rgba(249,115,22,0.5);" data-act="move" data-bid="3" data-pid="1">
-    <div class="pl-rhl" data-act="resize-l" data-bid="3" data-pid="1"><div class="pl-grip"></div></div>
-    <div class="pl-bb" data-act="open-edit" data-bid="3"><div class="pl-bn" style="color:#F97316;">Locations &amp; History</div><div class="pl-bsub"><span style="color:var(--t1);font-weight:500;">8 pts</span> • <span style="color:var(--t2);">1 dev</span></div></div>
-    <div class="pl-rhr" data-act="resize-r" data-bid="3" data-pid="1"><div class="pl-grip"></div></div>
-   </div></div></div><div class="pl-row" data-pid="4" style="flex: 134 0 0px; min-height: 20px;">
-   <div class="pl-rg" style="width:220px;min-width:220px;">
-    <div class="pl-dh" data-id="4"><div class="pl-gripicon"><div class="pl-gripdot"></div><div class="pl-gripdot"></div><div class="pl-gripdot"></div></div></div>
-    <div class="proj-color-bar" data-pid="4" style="width:10px;flex-shrink:0;background:#3B82F6;opacity:.75;cursor:pointer;transition:opacity .1s;" title="Change color"></div>
-    <div class="pl-rc">
-     <div class="pl-rn" contenteditable="true" data-id="4" spellcheck="false">Admin Tools</div>
-     <div class="pl-rs">
-      <span class="pl-pill" style="font-weight:500;color:var(--t1);">42 pts</span>
-      <button class="pl-add-blk" data-pid="4">+ block</button>
-     </div>
-    </div>
-    <button class="pl-del" data-id="4">×</button>
-   </div>
-   <div class="pl-rt"><div class="pl-cell" style="left:0px;width:53px;" data-sq="0" data-pid="4"></div><div class="pl-cell" style="left:53px;width:53px;" data-sq="1" data-pid="4"></div><div class="pl-cell" style="left:106px;width:53px;" data-sq="2" data-pid="4"></div><div class="pl-cell bound" style="left:159px;width:53px;" data-sq="3" data-pid="4"></div><div class="pl-cell" style="left:212px;width:53px;" data-sq="4" data-pid="4"></div><div class="pl-cell" style="left:265px;width:53px;" data-sq="5" data-pid="4"></div><div class="pl-cell" style="left:318px;width:53px;" data-sq="6" data-pid="4"></div><div class="pl-cell bound" style="left:371px;width:53px;" data-sq="7" data-pid="4"></div><div class="pl-cell" style="left:424px;width:53px;" data-sq="8" data-pid="4"></div><div class="pl-cell" style="left:477px;width:53px;" data-sq="9" data-pid="4"></div><div class="pl-cell" style="left:530px;width:53px;" data-sq="10" data-pid="4"></div><div class="pl-cell bound" style="left:583px;width:53px;" data-sq="11" data-pid="4"></div><div class="pl-cell" style="left:636px;width:53px;" data-sq="12" data-pid="4"></div><div class="pl-cell" style="left:689px;width:53px;" data-sq="13" data-pid="4"></div><div class="pl-cell" style="left:742px;width:53px;" data-sq="14" data-pid="4"></div><div class="pl-cell bound" style="left:795px;width:53px;" data-sq="15" data-pid="4"></div><div class="pl-cell" style="left:848px;width:53px;" data-sq="16" data-pid="4"></div><div class="pl-cell" style="left:901px;width:53px;" data-sq="17" data-pid="4"></div><div class="pl-cell" style="left:954px;width:53px;" data-sq="18" data-pid="4"></div><div class="pl-cell bound" style="left:1007px;width:53px;" data-sq="19" data-pid="4"></div><div class="pl-cell" style="left:1060px;width:53px;" data-sq="20" data-pid="4"></div><div class="pl-cell" style="left:1113px;width:53px;" data-sq="21" data-pid="4"></div><div class="pl-cell" style="left:1166px;width:53px;" data-sq="22" data-pid="4"></div><div class="pl-cell bound" style="left:1219px;width:53px;" data-sq="23" data-pid="4"></div><div class="pl-blk" style="left:0px;top:15px;width:318px;height:52px;background:rgba(59,130,246,0.1);border:0.5px solid rgba(59,130,246,0.5);" data-act="move" data-bid="5" data-pid="4">
-    <div class="pl-rhl" data-act="resize-l" data-bid="5" data-pid="4"><div class="pl-grip"></div></div>
-    <div class="pl-bb" data-act="open-edit" data-bid="5"><div class="pl-bn" style="color:#3B82F6;">Sub Nav</div><div class="pl-bsub"><span style="color:var(--t1);font-weight:500;">10 pts</span> • <span style="color:var(--t2);">0.75 dev</span></div></div>
-    <div class="pl-rhr" data-act="resize-r" data-bid="5" data-pid="4"><div class="pl-grip"></div></div>
-   </div><div class="pl-blk" style="left:318px;top:15px;width:424px;height:104px;background:rgba(59,130,246,0.1);border:0.5px solid rgba(59,130,246,0.5);" data-act="move" data-bid="13" data-pid="4">
-    <div class="pl-rhl" data-act="resize-l" data-bid="13" data-pid="4"><div class="pl-grip"></div></div>
-    <div class="pl-bb" data-act="open-edit" data-bid="13"><div class="pl-bn" style="color:#3B82F6;">Data Table</div><div class="pl-bsub" style="color:var(--t1);font-weight:500;">32 pts</div><div class="pl-bsub" style="color:var(--t2);">2 devs</div></div>
-    <div class="pl-rhr" data-act="resize-r" data-bid="13" data-pid="4"><div class="pl-grip"></div></div>
-   </div></div></div><div class="pl-row" data-pid="6" style="flex: 95 0 0px; min-height: 20px;">
-   <div class="pl-rg" style="width:220px;min-width:220px;">
-    <div class="pl-dh" data-id="6"><div class="pl-gripicon"><div class="pl-gripdot"></div><div class="pl-gripdot"></div><div class="pl-gripdot"></div></div></div>
-    <div class="proj-color-bar" data-pid="6" style="width:10px;flex-shrink:0;background:#10B981;opacity:.75;cursor:pointer;transition:opacity .1s;" title="Change color"></div>
-    <div class="pl-rc">
-     <div class="pl-rn" contenteditable="true" data-id="6" spellcheck="false">ShareTo - History</div>
-     <div class="pl-rs">
-      <span class="pl-pill" style="font-weight:500;color:var(--t1);">14 pts</span>
-      <button class="pl-add-blk" data-pid="6">+ block</button>
-     </div>
-    </div>
-    <button class="pl-del" data-id="6">×</button>
-   </div>
-   <div class="pl-rt"><div class="pl-cell" style="left:0px;width:53px;" data-sq="0" data-pid="6"></div><div class="pl-cell" style="left:53px;width:53px;" data-sq="1" data-pid="6"></div><div class="pl-cell" style="left:106px;width:53px;" data-sq="2" data-pid="6"></div><div class="pl-cell bound" style="left:159px;width:53px;" data-sq="3" data-pid="6"></div><div class="pl-cell" style="left:212px;width:53px;" data-sq="4" data-pid="6"></div><div class="pl-cell" style="left:265px;width:53px;" data-sq="5" data-pid="6"></div><div class="pl-cell" style="left:318px;width:53px;" data-sq="6" data-pid="6"></div><div class="pl-cell bound" style="left:371px;width:53px;" data-sq="7" data-pid="6"></div><div class="pl-cell" style="left:424px;width:53px;" data-sq="8" data-pid="6"></div><div class="pl-cell" style="left:477px;width:53px;" data-sq="9" data-pid="6"></div><div class="pl-cell" style="left:530px;width:53px;" data-sq="10" data-pid="6"></div><div class="pl-cell bound" style="left:583px;width:53px;" data-sq="11" data-pid="6"></div><div class="pl-cell" style="left:636px;width:53px;" data-sq="12" data-pid="6"></div><div class="pl-cell" style="left:689px;width:53px;" data-sq="13" data-pid="6"></div><div class="pl-cell" style="left:742px;width:53px;" data-sq="14" data-pid="6"></div><div class="pl-cell bound" style="left:795px;width:53px;" data-sq="15" data-pid="6"></div><div class="pl-cell" style="left:848px;width:53px;" data-sq="16" data-pid="6"></div><div class="pl-cell" style="left:901px;width:53px;" data-sq="17" data-pid="6"></div><div class="pl-cell" style="left:954px;width:53px;" data-sq="18" data-pid="6"></div><div class="pl-cell bound" style="left:1007px;width:53px;" data-sq="19" data-pid="6"></div><div class="pl-cell" style="left:1060px;width:53px;" data-sq="20" data-pid="6"></div><div class="pl-cell" style="left:1113px;width:53px;" data-sq="21" data-pid="6"></div><div class="pl-cell" style="left:1166px;width:53px;" data-sq="22" data-pid="6"></div><div class="pl-cell bound" style="left:1219px;width:53px;" data-sq="23" data-pid="6"></div><div class="pl-blk" style="left:424px;top:15px;width:212px;height:52px;background:rgba(16,185,129,0.1);border:0.5px solid rgba(16,185,129,0.5);" data-act="move" data-bid="7" data-pid="6">
-    <div class="pl-rhl" data-act="resize-l" data-bid="7" data-pid="6"><div class="pl-grip"></div></div>
-    <div class="pl-bb" data-act="open-edit" data-bid="7"><div class="pl-bn" style="color:#10B981;">UI - Block Calendar</div><div class="pl-bsub"><span style="color:var(--t1);font-weight:500;">4 pts</span> • <span style="color:var(--t2);">0.5 dev</span></div></div>
-    <div class="pl-rhr" data-act="resize-r" data-bid="7" data-pid="6"><div class="pl-grip"></div></div>
-   </div><div class="pl-blk" style="left:636px;top:15px;width:212px;height:65px;background:rgba(16,185,129,0.1);border:0.5px solid rgba(16,185,129,0.5);" data-act="move" data-bid="8" data-pid="6">
-    <div class="pl-rhl" data-act="resize-l" data-bid="8" data-pid="6"><div class="pl-grip"></div></div>
-    <div class="pl-bb" data-act="open-edit" data-bid="8"><div class="pl-bn" style="color:#10B981;">Sharing Table Readings</div><div class="pl-bsub" style="color:var(--t1);font-weight:500;">10 pts</div><div class="pl-bsub" style="color:var(--t2);">1.25 devs</div></div>
-    <div class="pl-rhr" data-act="resize-r" data-bid="8" data-pid="6"><div class="pl-grip"></div></div>
-   </div></div></div><div class="pl-row" data-pid="9" style="flex: 82 0 0px; min-height: 20px;">
-   <div class="pl-rg" style="width:220px;min-width:220px;">
-    <div class="pl-dh" data-id="9"><div class="pl-gripicon"><div class="pl-gripdot"></div><div class="pl-gripdot"></div><div class="pl-gripdot"></div></div></div>
-    <div class="proj-color-bar" data-pid="9" style="width:10px;flex-shrink:0;background:#8B5CF6;opacity:.75;cursor:pointer;transition:opacity .1s;" title="Change color"></div>
-    <div class="pl-rc">
-     <div class="pl-rn" contenteditable="true" data-id="9" spellcheck="false">Alerts/Notifications</div>
-     <div class="pl-rs">
-      <span class="pl-pill" style="font-weight:500;color:var(--t1);">0 pts</span>
-      <button class="pl-add-blk" data-pid="9">+ block</button>
-     </div>
-    </div>
-    <button class="pl-del" data-id="9">×</button>
-   </div>
-   <div class="pl-rt"><div class="pl-cell" style="left:0px;width:53px;" data-sq="0" data-pid="9"></div><div class="pl-cell" style="left:53px;width:53px;" data-sq="1" data-pid="9"></div><div class="pl-cell" style="left:106px;width:53px;" data-sq="2" data-pid="9"></div><div class="pl-cell bound" style="left:159px;width:53px;" data-sq="3" data-pid="9"></div><div class="pl-cell" style="left:212px;width:53px;" data-sq="4" data-pid="9"></div><div class="pl-cell" style="left:265px;width:53px;" data-sq="5" data-pid="9"></div><div class="pl-cell" style="left:318px;width:53px;" data-sq="6" data-pid="9"></div><div class="pl-cell bound" style="left:371px;width:53px;" data-sq="7" data-pid="9"></div><div class="pl-cell" style="left:424px;width:53px;" data-sq="8" data-pid="9"></div><div class="pl-cell" style="left:477px;width:53px;" data-sq="9" data-pid="9"></div><div class="pl-cell" style="left:530px;width:53px;" data-sq="10" data-pid="9"></div><div class="pl-cell bound" style="left:583px;width:53px;" data-sq="11" data-pid="9"></div><div class="pl-cell" style="left:636px;width:53px;" data-sq="12" data-pid="9"></div><div class="pl-cell" style="left:689px;width:53px;" data-sq="13" data-pid="9"></div><div class="pl-cell" style="left:742px;width:53px;" data-sq="14" data-pid="9"></div><div class="pl-cell bound" style="left:795px;width:53px;" data-sq="15" data-pid="9"></div><div class="pl-cell" style="left:848px;width:53px;" data-sq="16" data-pid="9"></div><div class="pl-cell" style="left:901px;width:53px;" data-sq="17" data-pid="9"></div><div class="pl-cell" style="left:954px;width:53px;" data-sq="18" data-pid="9"></div><div class="pl-cell bound" style="left:1007px;width:53px;" data-sq="19" data-pid="9"></div><div class="pl-cell" style="left:1060px;width:53px;" data-sq="20" data-pid="9"></div><div class="pl-cell" style="left:1113px;width:53px;" data-sq="21" data-pid="9"></div><div class="pl-cell" style="left:1166px;width:53px;" data-sq="22" data-pid="9"></div><div class="pl-cell bound" style="left:1219px;width:53px;" data-sq="23" data-pid="9"></div></div></div><div class="pl-row" data-pid="11" style="flex: 134 0 0px; min-height: 20px;">
-   <div class="pl-rg" style="width:220px;min-width:220px;">
-    <div class="pl-dh" data-id="11"><div class="pl-gripicon"><div class="pl-gripdot"></div><div class="pl-gripdot"></div><div class="pl-gripdot"></div></div></div>
-    <div class="proj-color-bar" data-pid="11" style="width:10px;flex-shrink:0;background:#EC4899;opacity:.75;cursor:pointer;transition:opacity .1s;" title="Change color"></div>
-    <div class="pl-rc">
-     <div class="pl-rn" contenteditable="true" data-id="11" spellcheck="false">Consigment API</div>
-     <div class="pl-rs">
-      <span class="pl-pill" style="font-weight:500;color:var(--t1);">26 pts</span>
-      <button class="pl-add-blk" data-pid="11">+ block</button>
-     </div>
-    </div>
-    <button class="pl-del" data-id="11">×</button>
-   </div>
-   <div class="pl-rt"><div class="pl-cell" style="left:0px;width:53px;" data-sq="0" data-pid="11"></div><div class="pl-cell" style="left:53px;width:53px;" data-sq="1" data-pid="11"></div><div class="pl-cell" style="left:106px;width:53px;" data-sq="2" data-pid="11"></div><div class="pl-cell bound" style="left:159px;width:53px;" data-sq="3" data-pid="11"></div><div class="pl-cell" style="left:212px;width:53px;" data-sq="4" data-pid="11"></div><div class="pl-cell" style="left:265px;width:53px;" data-sq="5" data-pid="11"></div><div class="pl-cell" style="left:318px;width:53px;" data-sq="6" data-pid="11"></div><div class="pl-cell bound" style="left:371px;width:53px;" data-sq="7" data-pid="11"></div><div class="pl-cell" style="left:424px;width:53px;" data-sq="8" data-pid="11"></div><div class="pl-cell" style="left:477px;width:53px;" data-sq="9" data-pid="11"></div><div class="pl-cell" style="left:530px;width:53px;" data-sq="10" data-pid="11"></div><div class="pl-cell bound" style="left:583px;width:53px;" data-sq="11" data-pid="11"></div><div class="pl-cell" style="left:636px;width:53px;" data-sq="12" data-pid="11"></div><div class="pl-cell" style="left:689px;width:53px;" data-sq="13" data-pid="11"></div><div class="pl-cell" style="left:742px;width:53px;" data-sq="14" data-pid="11"></div><div class="pl-cell bound" style="left:795px;width:53px;" data-sq="15" data-pid="11"></div><div class="pl-cell" style="left:848px;width:53px;" data-sq="16" data-pid="11"></div><div class="pl-cell" style="left:901px;width:53px;" data-sq="17" data-pid="11"></div><div class="pl-cell" style="left:954px;width:53px;" data-sq="18" data-pid="11"></div><div class="pl-cell bound" style="left:1007px;width:53px;" data-sq="19" data-pid="11"></div><div class="pl-cell" style="left:1060px;width:53px;" data-sq="20" data-pid="11"></div><div class="pl-cell" style="left:1113px;width:53px;" data-sq="21" data-pid="11"></div><div class="pl-cell" style="left:1166px;width:53px;" data-sq="22" data-pid="11"></div><div class="pl-cell bound" style="left:1219px;width:53px;" data-sq="23" data-pid="11"></div><div class="pl-blk" style="left:424px;top:15px;width:212px;height:104px;background:rgba(236,72,153,0.1);border:0.5px solid rgba(236,72,153,0.5);" data-act="move" data-bid="12" data-pid="11">
-    <div class="pl-rhl" data-act="resize-l" data-bid="12" data-pid="11"><div class="pl-grip"></div></div>
-    <div class="pl-bb" data-act="open-edit" data-bid="12"><div class="pl-bn" style="color:#EC4899;">Consignment API</div><div class="pl-bsub" style="color:var(--t1);font-weight:500;">16 pts</div><div class="pl-bsub" style="color:var(--t2);">2 devs</div></div>
-    <div class="pl-rhr" data-act="resize-r" data-bid="12" data-pid="11"><div class="pl-grip"></div></div>
-   </div><div class="pl-blk" style="left:636px;top:15px;width:212px;height:65px;background:rgba(236,72,153,0.1);border:0.5px solid rgba(236,72,153,0.5);" data-act="move" data-bid="17" data-pid="11">
-    <div class="pl-rhl" data-act="resize-l" data-bid="17" data-pid="11"><div class="pl-grip"></div></div>
-    <div class="pl-bb" data-act="open-edit" data-bid="17"><div class="pl-bn" style="color:#EC4899;">Replace Bulk Tool</div><div class="pl-bsub" style="color:var(--t1);font-weight:500;">10 pts</div><div class="pl-bsub" style="color:var(--t2);">1.25 devs</div></div>
-    <div class="pl-rhr" data-act="resize-r" data-bid="17" data-pid="11"><div class="pl-grip"></div></div>
-   </div></div></div><div class="pl-row" data-pid="15" style="flex: 82 0 0px; min-height: 20px;">
-   <div class="pl-rg" style="width:220px;min-width:220px;">
-    <div class="pl-dh" data-id="15"><div class="pl-gripicon"><div class="pl-gripdot"></div><div class="pl-gripdot"></div><div class="pl-gripdot"></div></div></div>
-    <div class="proj-color-bar" data-pid="15" style="width:10px;flex-shrink:0;background:#EAB308;opacity:.75;cursor:pointer;transition:opacity .1s;" title="Change color"></div>
-    <div class="pl-rc">
-     <div class="pl-rn" contenteditable="true" data-id="15" spellcheck="false">Share Location - Linked Assets</div>
-     <div class="pl-rs">
-      <span class="pl-pill" style="font-weight:500;color:var(--t1);">9 pts</span>
-      <button class="pl-add-blk" data-pid="15">+ block</button>
-     </div>
-    </div>
-    <button class="pl-del" data-id="15">×</button>
-   </div>
-   <div class="pl-rt"><div class="pl-cell" style="left:0px;width:53px;" data-sq="0" data-pid="15"></div><div class="pl-cell" style="left:53px;width:53px;" data-sq="1" data-pid="15"></div><div class="pl-cell" style="left:106px;width:53px;" data-sq="2" data-pid="15"></div><div class="pl-cell bound" style="left:159px;width:53px;" data-sq="3" data-pid="15"></div><div class="pl-cell" style="left:212px;width:53px;" data-sq="4" data-pid="15"></div><div class="pl-cell" style="left:265px;width:53px;" data-sq="5" data-pid="15"></div><div class="pl-cell" style="left:318px;width:53px;" data-sq="6" data-pid="15"></div><div class="pl-cell bound" style="left:371px;width:53px;" data-sq="7" data-pid="15"></div><div class="pl-cell" style="left:424px;width:53px;" data-sq="8" data-pid="15"></div><div class="pl-cell" style="left:477px;width:53px;" data-sq="9" data-pid="15"></div><div class="pl-cell" style="left:530px;width:53px;" data-sq="10" data-pid="15"></div><div class="pl-cell bound" style="left:583px;width:53px;" data-sq="11" data-pid="15"></div><div class="pl-cell" style="left:636px;width:53px;" data-sq="12" data-pid="15"></div><div class="pl-cell" style="left:689px;width:53px;" data-sq="13" data-pid="15"></div><div class="pl-cell" style="left:742px;width:53px;" data-sq="14" data-pid="15"></div><div class="pl-cell bound" style="left:795px;width:53px;" data-sq="15" data-pid="15"></div><div class="pl-cell" style="left:848px;width:53px;" data-sq="16" data-pid="15"></div><div class="pl-cell" style="left:901px;width:53px;" data-sq="17" data-pid="15"></div><div class="pl-cell" style="left:954px;width:53px;" data-sq="18" data-pid="15"></div><div class="pl-cell bound" style="left:1007px;width:53px;" data-sq="19" data-pid="15"></div><div class="pl-cell" style="left:1060px;width:53px;" data-sq="20" data-pid="15"></div><div class="pl-cell" style="left:1113px;width:53px;" data-sq="21" data-pid="15"></div><div class="pl-cell" style="left:1166px;width:53px;" data-sq="22" data-pid="15"></div><div class="pl-cell bound" style="left:1219px;width:53px;" data-sq="23" data-pid="15"></div><div class="pl-blk" style="left:848px;top:15px;width:212px;height:52px;background:rgba(234,179,8,0.12);border:0.5px solid rgba(234,179,8,0.55);" data-act="move" data-bid="16" data-pid="15">
-    <div class="pl-rhl" data-act="resize-l" data-bid="16" data-pid="15"><div class="pl-grip"></div></div>
-    <div class="pl-bb" data-act="open-edit" data-bid="16"><div class="pl-bn" style="color:#EAB308;">AOP &amp; List</div><div class="pl-bsub"><span style="color:var(--t1);font-weight:500;">6 pts</span> • <span style="color:var(--t2);">0.75 dev</span></div></div>
-    <div class="pl-rhr" data-act="resize-r" data-bid="16" data-pid="15"><div class="pl-grip"></div></div>
-   </div><div class="pl-blk" style="left:1060px;top:15px;width:212px;height:52px;background:rgba(234,179,8,0.12);border:0.5px solid rgba(234,179,8,0.55);" data-act="move" data-bid="18" data-pid="15">
-    <div class="pl-rhl" data-act="resize-l" data-bid="18" data-pid="15"><div class="pl-grip"></div></div>
-    <div class="pl-bb" data-act="open-edit" data-bid="18"><div class="pl-bn" style="color:#EAB308;">On Map</div><div class="pl-bsub"><span style="color:var(--t1);font-weight:500;">3 pts</span> • <span style="color:var(--t2);">0.5 dev</span></div></div>
-    <div class="pl-rhr" data-act="resize-r" data-bid="18" data-pid="15"><div class="pl-grip"></div></div>
-   </div></div></div><div class="pl-row" data-pid="19" style="flex: 82 0 0px; min-height: 20px;">
-   <div class="pl-rg" style="width:220px;min-width:220px;">
-    <div class="pl-dh" data-id="19"><div class="pl-gripicon"><div class="pl-gripdot"></div><div class="pl-gripdot"></div><div class="pl-gripdot"></div></div></div>
-    <div class="proj-color-bar" data-pid="19" style="width:10px;flex-shrink:0;background:#06B6D4;opacity:.75;cursor:pointer;transition:opacity .1s;" title="Change color"></div>
-    <div class="pl-rc">
-     <div class="pl-rn" contenteditable="true" data-id="19" spellcheck="false">Location Method</div>
-     <div class="pl-rs">
-      <span class="pl-pill" style="font-weight:500;color:var(--t1);">10 pts</span>
-      <button class="pl-add-blk" data-pid="19">+ block</button>
-     </div>
-    </div>
-    <button class="pl-del" data-id="19">×</button>
-   </div>
-   <div class="pl-rt"><div class="pl-cell" style="left:0px;width:53px;" data-sq="0" data-pid="19"></div><div class="pl-cell" style="left:53px;width:53px;" data-sq="1" data-pid="19"></div><div class="pl-cell" style="left:106px;width:53px;" data-sq="2" data-pid="19"></div><div class="pl-cell bound" style="left:159px;width:53px;" data-sq="3" data-pid="19"></div><div class="pl-cell" style="left:212px;width:53px;" data-sq="4" data-pid="19"></div><div class="pl-cell" style="left:265px;width:53px;" data-sq="5" data-pid="19"></div><div class="pl-cell" style="left:318px;width:53px;" data-sq="6" data-pid="19"></div><div class="pl-cell bound" style="left:371px;width:53px;" data-sq="7" data-pid="19"></div><div class="pl-cell" style="left:424px;width:53px;" data-sq="8" data-pid="19"></div><div class="pl-cell" style="left:477px;width:53px;" data-sq="9" data-pid="19"></div><div class="pl-cell" style="left:530px;width:53px;" data-sq="10" data-pid="19"></div><div class="pl-cell bound" style="left:583px;width:53px;" data-sq="11" data-pid="19"></div><div class="pl-cell" style="left:636px;width:53px;" data-sq="12" data-pid="19"></div><div class="pl-cell" style="left:689px;width:53px;" data-sq="13" data-pid="19"></div><div class="pl-cell" style="left:742px;width:53px;" data-sq="14" data-pid="19"></div><div class="pl-cell bound" style="left:795px;width:53px;" data-sq="15" data-pid="19"></div><div class="pl-cell" style="left:848px;width:53px;" data-sq="16" data-pid="19"></div><div class="pl-cell" style="left:901px;width:53px;" data-sq="17" data-pid="19"></div><div class="pl-cell" style="left:954px;width:53px;" data-sq="18" data-pid="19"></div><div class="pl-cell bound" style="left:1007px;width:53px;" data-sq="19" data-pid="19"></div><div class="pl-cell" style="left:1060px;width:53px;" data-sq="20" data-pid="19"></div><div class="pl-cell" style="left:1113px;width:53px;" data-sq="21" data-pid="19"></div><div class="pl-cell" style="left:1166px;width:53px;" data-sq="22" data-pid="19"></div><div class="pl-cell bound" style="left:1219px;width:53px;" data-sq="23" data-pid="19"></div><div class="pl-blk" style="left:848px;top:15px;width:212px;height:52px;background:rgba(6,182,212,0.1);border:0.5px solid rgba(6,182,212,0.5);" data-act="move" data-bid="20" data-pid="19">
-    <div class="pl-rhl" data-act="resize-l" data-bid="20" data-pid="19"><div class="pl-grip"></div></div>
-    <div class="pl-bb" data-act="open-edit" data-bid="20"><div class="pl-bn" style="color:#06B6D4;">AOP &amp; List</div><div class="pl-bsub"><span style="color:var(--t1);font-weight:500;">5 pts</span> • <span style="color:var(--t2);">0.75 dev</span></div></div>
-    <div class="pl-rhr" data-act="resize-r" data-bid="20" data-pid="19"><div class="pl-grip"></div></div>
-   </div><div class="pl-blk" style="left:1060px;top:15px;width:212px;height:52px;background:rgba(6,182,212,0.1);border:0.5px solid rgba(6,182,212,0.5);" data-act="move" data-bid="21" data-pid="19">
-    <div class="pl-rhl" data-act="resize-l" data-bid="21" data-pid="19"><div class="pl-grip"></div></div>
-    <div class="pl-bb" data-act="open-edit" data-bid="21"><div class="pl-bn" style="color:#06B6D4;">Map Display</div><div class="pl-bsub"><span style="color:var(--t1);font-weight:500;">5 pts</span> • <span style="color:var(--t2);">0.75 dev</span></div></div>
-    <div class="pl-rhr" data-act="resize-r" data-bid="21" data-pid="19"><div class="pl-grip"></div></div>
-   </div></div></div></div>
-   <div id="pl-cap"><div class="pl-cg" style="width:220px;min-width:220px;"></div><div class="pl-cc" style="width:212px;min-width:212px;">
-    <div class="pl-ctrack"><div class="pl-cfill" style="width:71%;background:var(--tw);opacity:.7;"></div></div>
-    <div class="pl-cinfo">
-     <div class="pl-clbl" style="color:var(--tw);font-weight:400;">23/32</div>
-     <div style="color:var(--tw);opacity:.7;"><svg width="11" height="10" viewBox="0 0 11 10" fill="none" style="display:block;flex-shrink:0;"><path d="M5.5 1.2L10 9H1L5.5 1.2Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"></path><line x1="5.5" y1="4" x2="5.5" y2="6.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></line><circle cx="5.5" cy="7.8" r="0.55" fill="currentColor"></circle></svg></div>
-    </div>
-   </div><div class="pl-cc" style="width:212px;min-width:212px;">
-    <div class="pl-ctrack"><div class="pl-cfill" style="width:60%;background:var(--tw);opacity:.7;"></div></div>
-    <div class="pl-cinfo">
-     <div class="pl-clbl" style="color:var(--tw);font-weight:400;">19/32</div>
-     <div style="color:var(--tw);opacity:.7;"><svg width="11" height="10" viewBox="0 0 11 10" fill="none" style="display:block;flex-shrink:0;"><path d="M5.5 1.2L10 9H1L5.5 1.2Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"></path><line x1="5.5" y1="4" x2="5.5" y2="6.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></line><circle cx="5.5" cy="7.8" r="0.55" fill="currentColor"></circle></svg></div>
-    </div>
-   </div><div class="pl-cc" style="width:212px;min-width:212px;">
-    <div class="pl-ctrack"><div class="pl-cfill" style="width:100%;background:var(--td);opacity:.7;"></div></div>
-    <div class="pl-cinfo">
-     <div class="pl-clbl" style="color:var(--td);font-weight:500;">36/32</div>
-     <div style="color:var(--td);"><svg width="11" height="10" viewBox="0 0 11 10" fill="none" style="display:block;flex-shrink:0;"><path d="M5.5 1.2L10 9H1L5.5 1.2Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"></path><line x1="5.5" y1="4" x2="5.5" y2="6.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></line><circle cx="5.5" cy="7.8" r="0.55" fill="currentColor"></circle></svg></div>
-    </div>
-   </div><div class="pl-cc" style="width:212px;min-width:212px;">
-    <div class="pl-ctrack"><div class="pl-cfill" style="width:88%;background:var(--ts);opacity:.7;"></div></div>
-    <div class="pl-cinfo">
-     <div class="pl-clbl" style="color:var(--ts);font-weight:500;">28/32</div>
-     
-    </div>
-   </div><div class="pl-cc" style="width:212px;min-width:212px;">
-    <div class="pl-ctrack"><div class="pl-cfill" style="width:34%;background:var(--tw);opacity:.7;"></div></div>
-    <div class="pl-cinfo">
-     <div class="pl-clbl" style="color:var(--tw);font-weight:400;">11/32</div>
-     <div style="color:var(--tw);opacity:.7;"><svg width="11" height="10" viewBox="0 0 11 10" fill="none" style="display:block;flex-shrink:0;"><path d="M5.5 1.2L10 9H1L5.5 1.2Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"></path><line x1="5.5" y1="4" x2="5.5" y2="6.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></line><circle cx="5.5" cy="7.8" r="0.55" fill="currentColor"></circle></svg></div>
-    </div>
-   </div><div class="pl-cc" style="width:212px;min-width:212px;">
-    <div class="pl-ctrack"><div class="pl-cfill" style="width:25%;background:var(--tw);opacity:.7;"></div></div>
-    <div class="pl-cinfo">
-     <div class="pl-clbl" style="color:var(--tw);font-weight:400;">8/32</div>
-     <div style="color:var(--tw);opacity:.7;"><svg width="11" height="10" viewBox="0 0 11 10" fill="none" style="display:block;flex-shrink:0;"><path d="M5.5 1.2L10 9H1L5.5 1.2Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"></path><line x1="5.5" y1="4" x2="5.5" y2="6.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"></line><circle cx="5.5" cy="7.8" r="0.55" fill="currentColor"></circle></svg></div>
-    </div>
-   </div></div>
+  <div id="pl-head"></div>
+  <div id="pl-cw"><div id="pl-canvas">
+   <div id="pl-sh"></div>
+   <div id="pl-rows"><div id="pl-drop-line"></div></div>
+   <div id="pl-cap"></div>
    <div id="blk-edit">
-    <div class="be-row"><span class="be-lbl">label</span><input class="be-inp" id="be-label" type="text" placeholder="optional"></div>
-    <div class="be-row"><span class="be-lbl">points</span><input class="be-inp" id="be-pts" type="number" min="1" max="9999" style="width:64px;"><span class="be-tag" id="be-computed"></span></div>
+    <div class="be-row"><span class="be-lbl">label</span><input class="be-inp" id="be-label" type="text" placeholder="optional"/></div>
+    <div class="be-row"><span class="be-lbl">points</span><input class="be-inp" id="be-pts" type="number" min="1" max="9999" style="width:64px;"/><span class="be-tag" id="be-computed"></span></div>
     <div class="be-actions"><button class="be-btn be-btn-del" id="be-del">delete block</button><button class="be-btn" id="be-close">done</button></div>
    </div>
   <div id="color-picker"></div>
   </div></div>
  </div>
  <div id="next-panel">
-  <div id="np-header"><span id="np-label">Later Projects</span><span id="np-count">3</span></div>
+  <div id="np-header"><span id="np-label">Later Projects</span><span id="np-count">0</span></div>
   <div id="np-add-row"><button class="np-abtn" id="np-addbtn">+ Add project</button></div>
-  <div id="np-body"><div id="np-drop-line"></div><div class="np-card" data-nid="22">
-   <div class="np-dh" data-id="22"><div class="pl-gripicon"><div class="pl-gripdot"></div><div class="pl-gripdot"></div><div class="pl-gripdot"></div></div></div>
-   <div class="np-content">
-    <div class="np-name" contenteditable="true" data-id="22" spellcheck="false">Design System Refresh</div>
-   </div>
-   <button class="np-del" data-id="22">×</button></div><div class="np-card" data-nid="23">
-   <div class="np-dh" data-id="23"><div class="pl-gripicon"><div class="pl-gripdot"></div><div class="pl-gripdot"></div><div class="pl-gripdot"></div></div></div>
-   <div class="np-content">
-    <div class="np-name" contenteditable="true" data-id="23" spellcheck="false">Offline Mode</div>
-   </div>
-   <button class="np-del" data-id="23">×</button></div><div class="np-card" data-nid="24">
-   <div class="np-dh" data-id="24"><div class="pl-gripicon"><div class="pl-gripdot"></div><div class="pl-gripdot"></div><div class="pl-gripdot"></div></div></div>
-   <div class="np-content">
-    <div class="np-name" contenteditable="true" data-id="24" spellcheck="false">Bulk Import v2</div>
-   </div>
-   <button class="np-del" data-id="24">×</button></div></div>
+  <div id="np-body"><div id="np-drop-line"></div></div>
  </div>
 </div>
 <div id="pl-drag-clone"></div>
@@ -541,6 +315,42 @@ let N=[
 ];
 
 let blockDrag=null,reorderDrag=null,selectedBlkId=null,editBid=null,pendingDeleteId=null,atMin=false;
+let currentFileKey='devplanner:untitled',currentFileHandle=null;
+const supportsFS='showSaveFilePicker' in window;
+let history=[],redoStack=[],_skipHistory=false;
+const MAX_HISTORY=50;
+
+function snapshot(){
+ if(_skipHistory)return;
+ history.push(JSON.stringify({P,N,S,planTitle}));
+ if(history.length>MAX_HISTORY)history.shift();
+ redoStack=[];
+}
+function undo(){
+ if(!history.length)return;
+ redoStack.push(JSON.stringify({P,N,S,planTitle}));
+ const d=JSON.parse(history.pop());
+ P=d.P;N=d.N;S=d.S;planTitle=d.planTitle;
+ _skipHistory=true;render();_skipHistory=false;
+ showToast('Undone');
+}
+function redo(){
+ if(!redoStack.length)return;
+ history.push(JSON.stringify({P,N,S,planTitle}));
+ const d=JSON.parse(redoStack.pop());
+ P=d.P;N=d.N;S=d.S;planTitle=d.planTitle;
+ _skipHistory=true;render();_skipHistory=false;
+ showToast('Redone');
+}
+function showToast(msg){
+ let t=document.getElementById('dp-toast');
+ if(!t){t=document.createElement('div');t.id='dp-toast';
+  t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--t1);color:var(--bg1);font-family:var(--f);font-size:12px;padding:6px 14px;border-radius:20px;z-index:3000;opacity:0;transition:opacity 0.15s;pointer-events:none;';
+  document.body.appendChild(t);}
+ t.textContent=msg;t.style.opacity='1';
+ clearTimeout(t._timer);
+ t._timer=setTimeout(()=>{t.style.opacity='0';},1500);
+}
 const cl=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
 const bh=(blk)=>{const spF=blk.durationQ/4;const pps=blk.points/spF;return{pps,h:Math.max(MINBH,Math.round(pps*HPP))};};
 const projTotalPts=(p)=>p.blocks.reduce((s,b)=>s+b.points,0);
@@ -599,7 +409,7 @@ function closeEdit(){editBid=null;selectedBlkId=null;document.getElementById('bl
 document.getElementById('be-close').addEventListener('click',()=>{commitEdit();closeEdit();});
 document.getElementById('be-del').addEventListener('click',()=>{
  if(!editBid)return;
- for(const p of P){const i=p.blocks.findIndex(x=>x.id===editBid);if(i>-1){p.blocks.splice(i,1);break;}}
+ snapshot();for(const p of P){const i=p.blocks.findIndex(x=>x.id===editBid);if(i>-1){p.blocks.splice(i,1);break;}}
  closeEdit();
 });
 document.getElementById('be-pts').addEventListener('input',()=>{
@@ -626,7 +436,7 @@ function showDeleteConfirm(id,name){
 }
 document.getElementById('del-cancel').addEventListener('click',()=>{pendingDeleteId=null;document.getElementById('del-modal').style.display='none';});
 document.getElementById('del-confirm').addEventListener('click',()=>{
- if(pendingDeleteId){P=P.filter(x=>x.id!==pendingDeleteId);pendingDeleteId=null;}
+ if(pendingDeleteId){snapshot();P=P.filter(x=>x.id!==pendingDeleteId);pendingDeleteId=null;}
  document.getElementById('del-modal').style.display='none';render();
 });
 document.getElementById('del-modal').addEventListener('click',e=>{
@@ -636,7 +446,7 @@ document.getElementById('del-modal').addEventListener('click',e=>{
 // ── Settings modal ──────────────────────────────────────────────────────
 document.getElementById('set-cancel').addEventListener('click',()=>{document.getElementById('set-modal').style.display='none';});
 document.getElementById('set-save').addEventListener('click',()=>{
- S.sprints=cl(parseInt(document.getElementById('si-sprints').value)||1,1,24);
+ snapshot();S.sprints=cl(parseInt(document.getElementById('si-sprints').value)||1,1,24);
  S.sprintWeeks=cl(parseInt(document.getElementById('si-weeks').value)||1,1,8);
  S.startDate=document.getElementById('si-start').value||S.startDate;
  S.devs=cl(parseInt(document.getElementById('si-devs').value)||1,1,30);
@@ -662,18 +472,20 @@ function openColorPicker(pid,barEl){
   sw.addEventListener('click',e=>{
    e.stopPropagation();
    const p2=P.find(x=>x.id===colorPickerPid);
-   if(p2){p2.ci=parseInt(sw.dataset.ci);delete p2.customDot;delete p2.customBg;delete p2.customBd;}
+   if(p2){snapshot();p2.ci=parseInt(sw.dataset.ci);delete p2.customDot;delete p2.customBg;delete p2.customBd;}
    closeColorPicker();render();
   });
  });
  document.getElementById('cp-color-input').addEventListener('input',e=>{
   const p2=P.find(x=>x.id===colorPickerPid);if(!p2)return;
+  if(!p2._colorSnapDone){snapshot();p2._colorSnapDone=true;}
   const hex=e.target.value;
   const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
   p2.customDot=hex;p2.customBg=`rgba(${r},${g},${b},0.1)`;p2.customBd=`rgba(${r},${g},${b},0.5)`;
   render();
  });
  document.getElementById('cp-color-input').addEventListener('change',e=>{
+  const p2=P.find(x=>x.id===colorPickerPid);if(p2)delete p2._colorSnapDone;
   closeColorPicker();
  });
  const canvas=document.getElementById('pl-canvas'),cr=canvas.getBoundingClientRect(),br=barEl.getBoundingClientRect();
@@ -684,12 +496,12 @@ document.addEventListener('mousedown',e=>{
  if(colorPickerPid&&!e.target.closest('#color-picker')&&!e.target.closest('.proj-color-bar'))closeColorPicker();
 });
 function saveState(){
- try{localStorage.setItem('devplanner',JSON.stringify({P,N,S,planTitle,uid}));}
+ try{localStorage.setItem(currentFileKey,JSON.stringify({P,N,S,planTitle,uid}));}
  catch(e){console.warn('Save failed:',e);}
 }
-function loadState(){
+function loadState(key){
  try{
-  const raw=localStorage.getItem('devplanner');
+  const raw=localStorage.getItem(key||currentFileKey);
   if(!raw)return false;
   const d=JSON.parse(raw);
   if(d.P)P=d.P;
@@ -699,6 +511,57 @@ function loadState(){
   if(d.uid&&d.uid>uid)uid=d.uid;
   return true;
  }catch(e){console.warn('Load failed:',e);return false;}
+}
+
+function getStateJSON(){
+ return JSON.stringify({P,N,S,planTitle,uid},null,2);
+}
+function applyStateJSON(json){
+ const d=JSON.parse(json);
+ if(d.P)P=d.P;if(d.N)N=d.N;
+ if(d.S)S=Object.assign({},S,d.S);
+ if(d.planTitle)planTitle=d.planTitle;
+ if(d.uid&&d.uid>uid)uid=d.uid;
+}
+
+async function fileSave(){
+ if(!currentFileHandle){await fileSaveAs();return;}
+ try{
+  const w=await currentFileHandle.createWritable();
+  await w.write(getStateJSON());await w.close();
+  saveState();showToast('Saved');
+ }catch(e){console.warn('Save error:',e);}
+}
+async function fileSaveAs(){
+ try{
+  const handle=await window.showSaveFilePicker({
+   suggestedName:(planTitle||'plan')+'.devplan',
+   types:[{description:'Dev Planner file',accept:{'application/json':['.devplan']}}]
+  });
+  currentFileHandle=handle;
+  const name=handle.name.replace(/\.devplan$/,'');
+  currentFileKey='devplanner:'+name;
+  planTitle=name;
+  const w=await handle.createWritable();
+  await w.write(getStateJSON());await w.close();
+  saveState();showToast('Saved as '+handle.name);
+ }catch(e){if(e.name!=='AbortError')console.warn('Save as error:',e);}
+}
+async function fileOpen(){
+ try{
+  const[handle]=await window.showOpenFilePicker({
+   types:[{description:'Dev Planner file',accept:{'application/json':['.devplan']}}]
+  });
+  const file=await handle.getFile();
+  const text=await file.text();
+  snapshot();
+  applyStateJSON(text);
+  currentFileHandle=handle;
+  const name=handle.name.replace(/\.devplan$/,'');
+  currentFileKey='devplanner:'+name;
+  planTitle=name;
+  render();showToast('Opened '+handle.name);
+ }catch(e){if(e.name!=='AbortError')console.warn('Open error:',e);}
 }
 function exportPNG(){
  const btn=document.getElementById('pl-menu-btn');
@@ -797,7 +660,32 @@ function render(){
   const existing=document.getElementById('pl-menu');
   if(existing){existing.remove();return;}
   const menu=document.createElement('div');menu.id='pl-menu';
+  const canUndo=history.length>0,canRedo=redoStack.length>0;
+  const fsItems=supportsFS?`
+   <div style="height:0.5px;background:var(--bd);margin:4px 0;"></div>
+   <button class="pl-menu-item" id="mi-open">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 4.5A1.5 1.5 0 012.5 3h2.586a1 1 0 01.707.293L7 5h4.5A1.5 1.5 0 0113 6.5v5A1.5 1.5 0 0111.5 13h-9A1.5 1.5 0 011 11.5v-7z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+    Open
+   </button>
+   <button class="pl-menu-item" id="mi-save">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7.5L12 4.5V12a1 1 0 01-1 1H3a1 1 0 01-1-1V2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M4 2v3.5h5V2M4 13v-4h6v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Save<span class="pl-menu-shortcut">&#8984;S</span>
+   </button>
+   <button class="pl-menu-item" id="mi-saveas">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7.5L12 4.5V12a1 1 0 01-1 1H3a1 1 0 01-1-1V2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M4 2v3.5h5V2M4 13v-4h6v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Save as&hellip;
+   </button>`:'';
   menu.innerHTML=`
+   <button class="pl-menu-item${canUndo?'':' disabled'}" id="mi-undo">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5h6a4 4 0 010 8H4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 2.5L4.5 5 2 7.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Undo<span class="pl-menu-shortcut">&#8984;Z</span>
+   </button>
+   <button class="pl-menu-item${canRedo?'':' disabled'}" id="mi-redo">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 5H6a4 4 0 000 8h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2.5L9.5 5 12 7.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Redo<span class="pl-menu-shortcut">&#8984;&#8679;Z</span>
+   </button>
+   ${fsItems}
+   <div style="height:0.5px;background:var(--bd);margin:4px 0;"></div>
    <button class="pl-menu-item" id="mi-settings">
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13M2.75 2.75l1.06 1.06M10.19 10.19l1.06 1.06M2.75 11.25l1.06-1.06M10.19 3.81l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
     Settings
@@ -812,6 +700,13 @@ function render(){
   const bRect=menuBtn.getBoundingClientRect(),hRect=plHead.getBoundingClientRect();
   menu.style.top=(bRect.bottom-hRect.top+4)+'px';
   menu.style.left=(bRect.right-hRect.left-menu.offsetWidth)+'px';
+  document.getElementById('mi-undo').addEventListener('click',()=>{menu.remove();undo();});
+  if(supportsFS){
+   document.getElementById('mi-open').addEventListener('click',()=>{menu.remove();fileOpen();});
+   document.getElementById('mi-save').addEventListener('click',()=>{menu.remove();fileSave();});
+   document.getElementById('mi-saveas').addEventListener('click',()=>{menu.remove();fileSaveAs();});
+  }
+  document.getElementById('mi-redo').addEventListener('click',()=>{menu.remove();redo();});
   document.getElementById('mi-settings').addEventListener('click',()=>{
    menu.remove();
    document.getElementById('si-sprints').value=S.sprints;
@@ -835,7 +730,7 @@ function render(){
    <div class="pl-qtick" style="left:${QW*2}px;opacity:.7;"></div>
    <div class="pl-qtick" style="left:${QW*3}px;opacity:.4;"></div>
   </div>`).join('');
- document.getElementById('pl-addbtn').addEventListener('click',()=>{P.push({id:nid(),name:'New project',ci:P.length%PC.length,blocks:[]});render();});
+ document.getElementById('pl-addbtn').addEventListener('click',()=>{snapshot();P.push({id:nid(),name:'New project',ci:P.length%PC.length,blocks:[]});render();});
 
  document.getElementById('pl-canvas').style.minWidth=cw+'px';
  const re=document.getElementById('pl-rows');re.innerHTML='';
@@ -903,12 +798,12 @@ function render(){
    startReorderDrag(e,'sprint',p.id,row);
   });
   const rnEl=row.querySelector('.pl-rn');
-  rnEl.addEventListener('blur',()=>{const p2=P.find(x=>x.id===p.id);if(p2)p2.name=rnEl.textContent.trim()||p2.name;});
+  rnEl.addEventListener('blur',()=>{const p2=P.find(x=>x.id===p.id);if(p2&&rnEl.textContent.trim()!==p2.name){snapshot();p2.name=rnEl.textContent.trim()||p2.name;}});
   rnEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();rnEl.blur();}});
   row.querySelector('.pl-add-blk').addEventListener('click',e=>{
    e.stopPropagation();
    const rightEdge=p.blocks.reduce((max,b)=>Math.max(max,b.startQ+b.durationQ),0);
-   p.blocks.push({id:nid(),label:'',points:8,startQ:Math.min(rightEdge,S.sprints*4-4),durationQ:4});render();
+   snapshot();p.blocks.push({id:nid(),label:'',points:8,startQ:Math.min(rightEdge,S.sprints*4-4),durationQ:4});render();
   });
   row.querySelector('.pl-del').addEventListener('click',e=>{e.stopPropagation();showDeleteConfirm(p.id,p.name);});
   row.querySelector('.pl-rt').addEventListener('click',e=>{
@@ -916,7 +811,7 @@ function render(){
    if(!cell||cell.dataset.pid!==p.id)return;
    const startQ=cl(parseInt(cell.dataset.sq),0,S.sprints*4-4);
    const newBlk={id:nid(),label:'',points:8,startQ,durationQ:4};
-   p.blocks.push(newBlk);render();
+   snapshot();p.blocks.push(newBlk);render();
    const freshEl=document.querySelector(`.pl-blk[data-bid="${newBlk.id}"]`);
    if(freshEl)openEdit(newBlk.id,freshEl);
   });
@@ -925,7 +820,7 @@ function render(){
     if(e.currentTarget.dataset.act==='move'){
      if(e.button!==0||reorderDrag)return;e.preventDefault();e.stopPropagation();
      const bid=blkEl.dataset.bid,blk=p.blocks.find(x=>x.id===bid);if(!blk)return;
-     blockDrag={act:'move',bid,pid:p.id,sx:e.clientX,sy:e.clientY,os:blk.startQ,odq:blk.durationQ,mode:'pending'};
+     snapshot();blockDrag={act:'move',bid,pid:p.id,sx:e.clientX,sy:e.clientY,os:blk.startQ,odq:blk.durationQ,mode:'pending'};
     }
    });
    const bb=blkEl.querySelector('[data-act="open-edit"]');
@@ -939,7 +834,7 @@ function render(){
     handle.addEventListener('mousedown',e=>{
      if(e.button!==0||reorderDrag)return;e.preventDefault();e.stopPropagation();
      const act=handle.dataset.act,bid=handle.dataset.bid,blk=p.blocks.find(x=>x.id===bid);if(!blk)return;
-     blockDrag={act,bid,pid:p.id,sx:e.clientX,os:blk.startQ,odq:blk.durationQ};
+     snapshot();blockDrag={act,bid,pid:p.id,sx:e.clientX,os:blk.startQ,odq:blk.durationQ};
     });
    });
   });
@@ -1071,6 +966,7 @@ function updateReorderVisuals(e){
 
 function finishReorderDrag(){
  if(!reorderDrag)return;
+ snapshot();
  const{sourcePanel,targetPanel,id,li,ni,cloneEl}=reorderDrag;
  cloneEl.style.display='none';
  document.getElementById('pl-drop-line').style.display='none';
@@ -1118,15 +1014,20 @@ window.addEventListener('mousemove',e=>{
   }
  }
 });
-window.addEventListener('mouseup',()=>{if(reorderDrag)finishReorderDrag();blockDrag=null;});
+window.addEventListener('mouseup',()=>{if(reorderDrag){finishReorderDrag();}blockDrag=null;});
 
-document.getElementById('np-addbtn').addEventListener('click',()=>{N.push({id:nid(),name:'New project',ci:N.length%PC.length,blocks:[]});renderNextPanel();document.getElementById('np-count').textContent=N.length;saveState();});
+document.getElementById('np-addbtn').addEventListener('click',()=>{snapshot();N.push({id:nid(),name:'New project',ci:N.length%PC.length,blocks:[]});renderNextPanel();document.getElementById('np-count').textContent=N.length;saveState();});
 
 loadState();
 render();
 requestAnimationFrame(render);
 window.addEventListener('resize',render);
+document.addEventListener('keydown',e=>{
+ const mod=e.metaKey||e.ctrlKey;
+ if(mod&&e.key==='z'&&!e.shiftKey){e.preventDefault();undo();}
+ if(mod&&(e.key==='Z'||e.key==='y'||(e.key==='z'&&e.shiftKey))){e.preventDefault();redo();}
+ if(mod&&e.key==='s'&&supportsFS){e.preventDefault();fileSave();}
+});
 </script>
-
-
-</body></html>
+</body>
+</html>
