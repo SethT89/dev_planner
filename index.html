@@ -621,6 +621,18 @@ ${cloneXML}
   if(btn){btn.textContent='Failed';setTimeout(()=>{btn.textContent='⋮';btn.disabled=false;},2000);}
  }
 }
+function newPlan(){
+ if(!confirm('Start a new plan? Unsaved changes will be lost.'))return;
+ snapshot();
+ planTitle='New Plan';
+ S={sprints:6,sprintWeeks:2,devs:4,pointsPerDev:8,startDate:new Date().toISOString().slice(0,10)};
+ P=[];N=[];
+ currentFileHandle=null;
+ currentFileKey='devplanner:untitled-'+Date.now();
+ history=[];redoStack=[];
+ render();
+ showToast('New plan created');
+}
 function render(){
  computeLayout();
  const cap=S.devs*S.pointsPerDev,stats=ss(),oc=stats.filter(s=>s.over).length;
@@ -669,6 +681,11 @@ function render(){
    </button>
    ${fsItems}
    <div style="height:0.5px;background:var(--bd);margin:4px 0;"></div>
+   <button class="pl-menu-item" id="mi-new">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M7 6v4M5 8h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    New plan
+   </button>
+   <div style="height:0.5px;background:var(--bd);margin:4px 0;"></div>
    <button class="pl-menu-item" id="mi-settings">
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v1.5M7 11.5V13M1 7h1.5M11.5 7H13M2.75 2.75l1.06 1.06M10.19 10.19l1.06 1.06M2.75 11.25l1.06-1.06M10.19 3.81l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
     Settings
@@ -684,6 +701,7 @@ function render(){
   menu.style.top=(bRect.bottom-hRect.top+4)+'px';
   menu.style.left=(bRect.right-hRect.left-menu.offsetWidth)+'px';
   document.getElementById('mi-undo').addEventListener('click',()=>{menu.remove();undo();});
+  document.getElementById('mi-new').addEventListener('click',()=>{menu.remove();newPlan();});
   if(supportsFS){
    document.getElementById('mi-open').addEventListener('click',()=>{menu.remove();fileOpen();});
    document.getElementById('mi-save').addEventListener('click',()=>{menu.remove();fileSave();});
