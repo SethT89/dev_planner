@@ -277,41 +277,24 @@ const PC=[
 ];
 
 let uid=22;const nid=()=>String(uid++);
-let planTitle='Dev Planner';
+let planTitle='Example Roadmap';
 let S={sprints:6,sprintWeeks:2,devs:4,pointsPerDev:8,startDate:'2025-04-07'};
 let P=[
- {id:'1',name:'Account Merger',ci:0,blocks:[
-  {id:'2',label:'Assets & Devices',points:16,startQ:0,durationQ:4},
-  {id:'3',label:'Locations & History',points:8,startQ:4,durationQ:4},
+ {id:'1',name:'Project 1',ci:0,blocks:[
+  {id:'2',label:'Example Block',points:32,startQ:0,durationQ:8},
  ]},
- {id:'4',name:'Admin Tools',ci:1,blocks:[
-  {id:'5',label:'Sub Nav',points:10,startQ:0,durationQ:6},
-  {id:'13',label:'Data Table',points:32,startQ:6,durationQ:8},
+ {id:'4',name:'Project 2',ci:4,blocks:[
+  {id:'5',label:'Example Block',points:48,startQ:4,durationQ:12},
  ]},
- {id:'6',name:'ShareTo - History',ci:2,blocks:[
-  {id:'7',label:'UI - Block Calendar',points:4,startQ:8,durationQ:4},
-  {id:'8',label:'Sharing Table Readings',points:10,startQ:12,durationQ:4},
- ]},
- {id:'9',name:'Alerts/Notifications',ci:3,blocks:[
-  {id:'10',label:'',points:1,startQ:16,durationQ:4},
- ]},
- {id:'11',name:'Consigment API',ci:4,blocks:[
-  {id:'12',label:'Consignment API',points:16,startQ:8,durationQ:4},
-  {id:'17',label:'Replace Bulk Tool',points:10,startQ:12,durationQ:4},
- ]},
- {id:'15',name:'Share Location - Linked Assets',ci:5,blocks:[
-  {id:'16',label:'AOP & List',points:6,startQ:16,durationQ:4},
-  {id:'18',label:'On Map',points:3,startQ:20,durationQ:4},
- ]},
- {id:'19',name:'Location Method',ci:6,blocks:[
-  {id:'20',label:'AOP & List',points:5,startQ:16,durationQ:4},
-  {id:'21',label:'Map Display',points:5,startQ:20,durationQ:4},
+ {id:'6',name:'Project 3',ci:2,blocks:[
+  {id:'7',label:'Example Block',points:8,startQ:16,durationQ:4},
  ]},
 ];
 let N=[
  {id:nid(),name:'Design System Refresh',ci:7,blocks:[]},
  {id:nid(),name:'Offline Mode',ci:0,blocks:[]},
  {id:nid(),name:'Bulk Import v2',ci:2,blocks:[]},
+ {id:nid(),name:'Alerts/Notifications',ci:3,blocks:[]},
 ];
 
 let blockDrag=null,reorderDrag=null,selectedBlkId=null,editBid=null,pendingDeleteId=null,atMin=false;
