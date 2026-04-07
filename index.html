@@ -342,9 +342,32 @@ async function cloudLoad(id){
   if(d.S)S=Object.assign({},S,d.S);
   if(d.planTitle)planTitle=d.planTitle;
   if(d.uid&&d.uid>uid)uid=d.uid;
-  cloudPlanId=id;return true;
+  cloudPlanId=id;_lastKnownUpdate=result[0].updated_at||null;return true;
  }catch(e){console.error('Cloud load failed:',e);return false;}
 }
+
+// Polling — check updated_at every 10s, only fetch full data if changed
+let _lastKnownUpdate=null;
+let _isEditing=false; // don't overwrite while user is actively interacting
+document.addEventListener('mousedown',()=>{_isEditing=true;});
+document.addEventListener('mouseup',()=>{setTimeout(()=>{_isEditing=false;},2000);});
+document.addEventListener('keydown',()=>{_isEditing=true;setTimeout(()=>{_isEditing=false;},2000);});
+
+async function pollForUpdates(){
+ if(!cloudPlanId||_isEditing)return;
+ try{
+  const result=await sbRequest('GET','/rest/v1/plans?id=eq.'+cloudPlanId+'&select=updated_at');
+  if(!result||!result.length)return;
+  const serverTime=result[0].updated_at;
+  if(_lastKnownUpdate&&serverTime!==_lastKnownUpdate){
+   // Something changed — fetch the full plan
+   await cloudLoad(cloudPlanId);
+   _skipHistory=true;render();_skipHistory=false;
+  }
+  _lastKnownUpdate=serverTime;
+ }catch(e){} // silently ignore poll errors
+}
+setInterval(pollForUpdates,10000);
 let history=[],redoStack=[],_skipHistory=false;
 const MAX_HISTORY=50;
 
