@@ -697,7 +697,6 @@ ${cloneXML}
  }
 }
 function newPlan(){
- if(!confirm('Start a new plan? Unsaved changes will be lost.'))return;
  snapshot();
  planTitle='New Plan';
  S={sprints:6,sprintWeeks:2,devs:4,pointsPerDev:8,startDate:new Date().toISOString().slice(0,10)};
