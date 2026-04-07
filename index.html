@@ -697,21 +697,10 @@ ${cloneXML}
  }
 }
 function newPlan(){
- snapshot();
- planTitle='New Plan';
- S={sprints:6,sprintWeeks:2,devs:4,pointsPerDev:8,startDate:new Date().toISOString().slice(0,10)};
- const id1=nid(),id2=nid(),id3=nid();
- P=[
-  {id:id1,name:'Project 1',ci:0,blocks:[]},
-  {id:id2,name:'Project 2',ci:1,blocks:[]},
-  {id:id3,name:'Project 3',ci:2,blocks:[]},
- ];
- N=[];
- currentFileHandle=null;
- currentFileKey='devplanner:untitled-'+Date.now();
- history=[];redoStack=[];
- render();
- showToast('New plan created');
+ // Open a clean version of the app in a new tab (no ?plan= so it creates a fresh plan)
+ const url=new URL(window.location.href);
+ url.searchParams.delete('plan');
+ window.open(url.toString(),'_blank');
 }
 function render(){
  computeLayout();
