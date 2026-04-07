@@ -454,7 +454,23 @@ function openEdit(bid,blkEl){
  document.getElementById('be-pts').value=b.points;
  document.getElementById('be-computed').textContent=`${Math.round(pps)} pts/sp \u00b7 ${(pps/S.pointsPerDev).toFixed(1)} devs`;
  const canvas=document.getElementById('pl-canvas'),cr=canvas.getBoundingClientRect(),br=blkEl.getBoundingClientRect();
- document.getElementById('blk-edit').style.cssText=`display:flex;top:${br.bottom-cr.top+6}px;left:${br.left-cr.left}px;`;
+ const ed=document.getElementById('blk-edit');
+ // Initial position: below and left-aligned to block
+ ed.style.cssText='display:flex;top:0;left:0;visibility:hidden;';
+ // Measure after display so we know popover dimensions
+ const edW=ed.offsetWidth||200,edH=ed.offsetHeight||100;
+ const vw=window.innerWidth,vh=window.innerHeight;
+ // Preferred: below block
+ let top=br.bottom-cr.top+6;
+ let left=br.left-cr.left;
+ // Flip above if would overflow bottom
+ if(br.bottom+edH+6>vh) top=br.top-cr.top-edH-6;
+ // Flip right-align if would overflow right
+ if(br.left+edW>vw) left=br.right-cr.left-edW;
+ // Clamp to canvas bounds
+ top=Math.max(0,top);
+ left=Math.max(0,left);
+ ed.style.cssText=`display:flex;top:${top}px;left:${left}px;visibility:visible;`;
  setTimeout(()=>document.getElementById('be-pts').focus(),50);
 }
 function commitEdit(){
@@ -547,7 +563,18 @@ function openColorPicker(pid,barEl){
   closeColorPicker();
  });
  const canvas=document.getElementById('pl-canvas'),cr=canvas.getBoundingClientRect(),br=barEl.getBoundingClientRect();
- cp.style.cssText=`display:flex;top:${br.top-cr.top}px;left:${br.right-cr.left+6}px;`;
+ // Smart position color picker
+ cp.style.cssText='display:flex;top:0;left:0;visibility:hidden;';
+ const cpW=cp.offsetWidth||140,cpH=cp.offsetHeight||80;
+ const vw2=window.innerWidth,vh2=window.innerHeight;
+ let cpTop=br.top-cr.top;
+ let cpLeft=br.right-cr.left+6;
+ // Flip left if overflows right
+ if(br.right+cpW+6>vw2) cpLeft=br.left-cr.left-cpW-6;
+ // Flip up if overflows bottom
+ if(br.top+cpH>vh2) cpTop=br.bottom-cr.top-cpH;
+ cpTop=Math.max(0,cpTop);cpLeft=Math.max(0,cpLeft);
+ cp.style.cssText=`display:flex;top:${cpTop}px;left:${cpLeft}px;visibility:visible;`;
 }
 function closeColorPicker(){colorPickerPid=null;document.getElementById('color-picker').style.display='none';}
 document.addEventListener('mousedown',e=>{
