@@ -300,6 +300,51 @@ let N=[
 let blockDrag=null,reorderDrag=null,selectedBlkId=null,editBid=null,pendingDeleteId=null,atMin=false;
 let currentFileKey='devplanner:untitled',currentFileHandle=null;
 const supportsFS='showSaveFilePicker' in window;
+
+const SB_URL='https://wcwneipimfgdrbfgmczp.supabase.co';
+const SB_KEY='sb_publishable_Mr_wVlz-8FQlsfeSI_e8qg_JC_0qI-y';
+let cloudPlanId=null;
+
+async function sbRequest(method,path,body){
+ const res=await fetch(SB_URL+path,{
+  method,
+  headers:{'apikey':SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+  body:body?JSON.stringify(body):undefined
+ });
+ if(!res.ok){const t=await res.text();throw new Error(res.status+': '+t);}
+ const text=await res.text();return text?JSON.parse(text):null;
+}
+let _cloudSaveTimer=null;
+function cloudSaveDebounced(){
+ clearTimeout(_cloudSaveTimer);
+ _cloudSaveTimer=setTimeout(cloudSync,2000);
+}
+async function cloudSync(){
+ const payload={title:planTitle,data:{P,N,S,planTitle,uid},updated_at:new Date().toISOString()};
+ try{
+  if(cloudPlanId){
+   await sbRequest('PATCH','/rest/v1/plans?id=eq.'+cloudPlanId,payload);
+  }else{
+   const result=await sbRequest('POST','/rest/v1/plans',payload);
+   cloudPlanId=result[0].id;
+   const url=new URL(window.location.href);
+   url.searchParams.set('plan',cloudPlanId);
+   window.history.replaceState({},'',url.toString());
+  }
+ }catch(e){console.error('Cloud sync failed:',e);}
+}
+async function cloudLoad(id){
+ try{
+  const result=await sbRequest('GET','/rest/v1/plans?id=eq.'+id+'&select=*');
+  if(!result||!result.length)return false;
+  const d=result[0].data;
+  if(d.P)P=d.P;if(d.N)N=d.N;
+  if(d.S)S=Object.assign({},S,d.S);
+  if(d.planTitle)planTitle=d.planTitle;
+  if(d.uid&&d.uid>uid)uid=d.uid;
+  cloudPlanId=id;return true;
+ }catch(e){console.error('Cloud load failed:',e);return false;}
+}
 let history=[],redoStack=[],_skipHistory=false;
 const MAX_HISTORY=50;
 
@@ -481,6 +526,7 @@ document.addEventListener('mousedown',e=>{
 function saveState(){
  try{localStorage.setItem(currentFileKey,JSON.stringify({P,N,S,planTitle,uid}));}
  catch(e){console.warn('Save failed:',e);}
+ cloudSaveDebounced();
 }
 function loadState(key){
  try{
@@ -699,6 +745,11 @@ function render(){
    <button class="pl-menu-item" id="mi-export">
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v7M4.5 5.5L7 8l2.5-2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 10v1.5a.5.5 0 00.5.5h9a.5.5 0 00.5-.5V10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
     Export
+   </button>
+   <div style="height:0.5px;background:var(--bd);margin:4px 0;"></div>
+   <button class="pl-menu-item" id="mi-share">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 1h4v4M13 1L7.5 6.5M6 3H2a1 1 0 00-1 1v8a1 1 0 001 1h8a1 1 0 001-1V9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Copy link
    </button>`;
   const plHead=document.getElementById('pl-head');
   plHead.appendChild(menu);
@@ -726,6 +777,12 @@ function render(){
   document.getElementById('mi-export').addEventListener('click',()=>{
    menu.remove();
    exportPNG();
+  });
+  document.getElementById('mi-share').addEventListener('click',()=>{
+   menu.remove();
+   navigator.clipboard.writeText(window.location.href)
+    .then(()=>showToast('Link copied!'))
+    .catch(()=>showToast(window.location.href));
   });
  });
 
@@ -1025,9 +1082,25 @@ window.addEventListener('mouseup',()=>{if(reorderDrag){finishReorderDrag();}bloc
 
 document.getElementById('np-addbtn').addEventListener('click',()=>{snapshot();N.push({id:nid(),name:'New project',ci:N.length%PC.length,blocks:[]});renderNextPanel();document.getElementById('np-count').textContent=N.length;saveState();});
 
-loadState();
-render();
-requestAnimationFrame(render);
+const _urlPlanId=new URLSearchParams(window.location.search).get('plan');
+if(_urlPlanId){
+ cloudLoad(_urlPlanId).then(loaded=>{
+  if(loaded){render();requestAnimationFrame(render);}
+  else{loadState();render();requestAnimationFrame(render);}
+ });
+}else{
+ loadState();
+ // Create a new plan in Supabase so the URL is always shareable
+ sbRequest('POST','/rest/v1/plans',{title:planTitle,data:{P,N,S,planTitle,uid}})
+  .then(result=>{
+   cloudPlanId=result[0].id;
+   const url=new URL(window.location.href);
+   url.searchParams.set('plan',cloudPlanId);
+   window.history.replaceState({},'',url.toString());
+  })
+  .catch(e=>console.warn('Could not create cloud plan:',e));
+ render();requestAnimationFrame(render);
+}
 window.addEventListener('resize',render);
 document.addEventListener('keydown',e=>{
  const mod=e.metaKey||e.ctrlKey;
