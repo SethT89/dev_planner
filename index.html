@@ -25,7 +25,7 @@
  --bdw:rgba(250,199,117,0.4);--bdi:rgba(133,183,235,0.4);--bdd:rgba(240,149,149,0.4);
 }}
 html,body{height:100%;margin:0;background:var(--bg3);}
-body{font-family:var(--f);color:var(--t1);display:flex;flex-direction:column;height:100%;}
+body{font-family:var(--f);color:var(--t1);display:flex;flex-direction:column;height:100%;overflow:hidden;}
 #app{display:flex;align-items:stretch;border:0.5px solid var(--bd);overflow:hidden;flex:1;}
 
 /* ── Sprint planner ── */
@@ -715,9 +715,10 @@ function showOfflineBanner(){
  let b=document.getElementById('dp-offline-banner');
  if(!b){
   b=document.createElement('div');b.id='dp-offline-banner';
-  b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:4000;background:#854f0b;color:#faeeda;font-size:12px;font-family:var(--f);padding:7px 16px;text-align:center;';
+  b.style.cssText='background:#854f0b;color:#faeeda;font-size:12px;font-family:var(--f);padding:7px 16px;text-align:center;flex-shrink:0;';
   b.textContent="You're offline — changes are saved locally and will sync when you reconnect.";
-  document.body.appendChild(b);
+  const app=document.getElementById('app');
+  document.body.insertBefore(b,app);
  }
 }
 function hideOfflineBanner(){
