@@ -548,9 +548,13 @@ document.addEventListener('mousedown',e=>{
  if(colorPickerPid&&!e.target.closest('#color-picker')&&!e.target.closest('.proj-color-bar'))closeColorPicker();
 });
 function saveState(){
- try{localStorage.setItem(currentFileKey,JSON.stringify({P,N,S,planTitle,uid}));}
- catch(e){console.warn('Save failed:',e);}
- cloudSaveDebounced();
+ if(_isOffline){
+  // Offline — save to localStorage as fallback
+  try{localStorage.setItem(currentFileKey,JSON.stringify({P,N,S,planTitle,uid}));}
+  catch(e){console.warn('Local save failed:',e);}
+ }else{
+  cloudSaveDebounced();
+ }
 }
 function loadState(key){
  try{
@@ -702,6 +706,66 @@ function newPlan(){
  url.searchParams.delete('plan');
  window.open(url.toString(),'_blank');
 }
+// ── Offline / online handling ──────────────────────────────────────────
+let _isOffline=false;
+let _offlineSnapshot=null; // state snapshot taken when going offline
+let _wentOfflineAt=null;   // timestamp when we went offline
+
+function showOfflineBanner(){
+ let b=document.getElementById('dp-offline-banner');
+ if(!b){
+  b=document.createElement('div');b.id='dp-offline-banner';
+  b.style.cssText='position:fixed;top:0;left:0;right:0;z-index:4000;background:#854f0b;color:#faeeda;font-size:12px;font-family:var(--f);padding:7px 16px;text-align:center;';
+  b.textContent="You're offline — changes are saved locally and will sync when you reconnect.";
+  document.body.appendChild(b);
+ }
+}
+function hideOfflineBanner(){
+ const b=document.getElementById('dp-offline-banner');
+ if(b)b.remove();
+}
+
+window.addEventListener('offline',()=>{
+ _isOffline=true;
+ _wentOfflineAt=new Date().toISOString();
+ _offlineSnapshot=JSON.stringify({P,N,S,planTitle,uid});
+ showOfflineBanner();
+ showToast('Offline — saving locally');
+});
+
+window.addEventListener('online',async()=>{
+ _isOffline=false;
+ hideOfflineBanner();
+ if(!cloudPlanId||!_wentOfflineAt){
+  showToast('Back online');
+  return;
+ }
+ // Check if Supabase was updated while we were offline
+ try{
+  const result=await sbRequest('GET','/rest/v1/plans?id=eq.'+cloudPlanId+'&select=updated_at');
+  const serverTime=result&&result[0]?result[0].updated_at:null;
+  if(serverTime&&serverTime>_wentOfflineAt){
+   // Server is newer — someone else edited while we were offline
+   const choice=confirm('The plan was updated while you were offline.\n\nOK = Load the latest version\nCancel = Keep your offline changes');
+   if(choice){
+    await cloudLoad(cloudPlanId);
+    _skipHistory=true;render();_skipHistory=false;
+    showToast('Loaded latest version');
+   }else{
+    cloudSync(); // push our offline changes up
+    showToast('Your changes synced');
+   }
+  }else{
+   // We are newer — just push our changes
+   cloudSync();
+   showToast('Back online — synced');
+  }
+ }catch(e){
+  showToast('Back online');
+ }
+ _wentOfflineAt=null;_offlineSnapshot=null;
+});
+
 function render(){
  computeLayout();
  const cap=S.devs*S.pointsPerDev,stats=ss(),oc=stats.filter(s=>s.over).length;
