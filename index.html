@@ -320,14 +320,20 @@ function cloudSaveDebounced(){
  clearTimeout(_cloudSaveTimer);
  _cloudSaveTimer=setTimeout(cloudSync,2000);
 }
+let _myLastSaveTime=null;
 async function cloudSync(){
- const payload={title:planTitle,data:{P,N,S,planTitle,uid},updated_at:new Date().toISOString()};
+ const now=new Date().toISOString();
+ const payload={title:planTitle,data:{P,N,S,planTitle,uid},updated_at:now};
  try{
   if(cloudPlanId){
    await sbRequest('PATCH','/rest/v1/plans?id=eq.'+cloudPlanId,payload);
+   _myLastSaveTime=now;
+   _lastKnownUpdate=now;
   }else{
    const result=await sbRequest('POST','/rest/v1/plans',payload);
    cloudPlanId=result[0].id;
+   _myLastSaveTime=now;
+   _lastKnownUpdate=now;
    const url=new URL(window.location.href);
    url.searchParams.set('plan',cloudPlanId);
    window.history.replaceState({},'',url.toString());
@@ -360,13 +366,13 @@ async function pollForUpdates(){
   const result=await sbRequest('GET','/rest/v1/plans?id=eq.'+cloudPlanId+'&select=updated_at');
   if(!result||!result.length)return;
   const serverTime=result[0].updated_at;
-  if(_lastKnownUpdate&&serverTime!==_lastKnownUpdate){
-   // Something changed — fetch the full plan
+  // Only reload if changed AND it wasn't our own save
+  if(_lastKnownUpdate&&serverTime!==_lastKnownUpdate&&serverTime!==_myLastSaveTime){
    await cloudLoad(cloudPlanId);
    _skipHistory=true;render();_skipHistory=false;
   }
   _lastKnownUpdate=serverTime;
- }catch(e){} // silently ignore poll errors
+ }catch(e){}
 }
 setInterval(pollForUpdates,10000);
 let history=[],redoStack=[],_skipHistory=false;
