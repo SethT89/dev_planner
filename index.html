@@ -303,6 +303,7 @@ const supportsFS='showSaveFilePicker' in window;
 
 const SB_URL='https://wcwneipimfgdrbfgmczp.supabase.co';
 const SB_KEY='sb_publishable_Mr_wVlz-8FQlsfeSI_e8qg_JC_0qI-y';
+const EMBEDDED_PLAN_ID=null;
 let cloudPlanId=null;
 
 async function sbRequest(method,path,body){
@@ -587,17 +588,22 @@ async function fileSave(){
 async function fileSaveAs(){
  try{
   const handle=await window.showSaveFilePicker({
-   suggestedName:(planTitle||'plan')+'.devplan',
-   types:[{description:'Dev Planner file',accept:{'application/json':['.devplan']}}]
+   suggestedName:(planTitle||'plan')+'.html',
+   types:[{description:'Dev Planner HTML file',accept:{'text/html':['.html']}}]
   });
   currentFileHandle=handle;
-  const name=handle.name.replace(/\.devplan$/,'');
+  const name=handle.name.replace(/\.html$/,'');
   currentFileKey='devplanner:'+name;
   planTitle=name;
+  // Bake the cloudPlanId into the saved HTML so reopening reconnects automatically
+  const id=cloudPlanId||'';
+  let fileContent=document.documentElement.outerHTML;
+  fileContent=fileContent.replace('const EMBEDDED_PLAN_ID=null',`const EMBEDDED_PLAN_ID='${id}'`);
   const w=await handle.createWritable();
-  await w.write(getStateJSON());await w.close();
-  saveState();showToast('Saved as '+handle.name);
- }catch(e){if(e.name!=='AbortError')console.warn('Save as error:',e);}
+  await w.write('<!DOCTYPE html>\n'+fileContent);
+  await w.close();
+  showToast('Saved local copy');
+ }catch(e){if(e.name!=='AbortError')console.warn('Save local error:',e);}
 }
 async function fileOpen(){
  try{
@@ -737,13 +743,9 @@ function render(){
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 4.5A1.5 1.5 0 012.5 3h2.586a1 1 0 01.707.293L7 5h4.5A1.5 1.5 0 0113 6.5v5A1.5 1.5 0 0111.5 13h-9A1.5 1.5 0 011 11.5v-7z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
     Open
    </button>
-   <button class="pl-menu-item" id="mi-save">
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7.5L12 4.5V12a1 1 0 01-1 1H3a1 1 0 01-1-1V2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M4 2v3.5h5V2M4 13v-4h6v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Save<span class="pl-menu-shortcut">&#8984;S</span>
-   </button>
    <button class="pl-menu-item" id="mi-saveas">
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7.5L12 4.5V12a1 1 0 01-1 1H3a1 1 0 01-1-1V2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M4 2v3.5h5V2M4 13v-4h6v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Save as&hellip;
+    Save local
    </button>`:'';
   menu.innerHTML=`
    <button class="pl-menu-item${canUndo?'':' disabled'}" id="mi-undo">
@@ -784,7 +786,6 @@ function render(){
   document.getElementById('mi-new').addEventListener('click',()=>{menu.remove();newPlan();});
   if(supportsFS){
    document.getElementById('mi-open').addEventListener('click',()=>{menu.remove();fileOpen();});
-   document.getElementById('mi-save').addEventListener('click',()=>{menu.remove();fileSave();});
    document.getElementById('mi-saveas').addEventListener('click',()=>{menu.remove();fileSaveAs();});
   }
   document.getElementById('mi-redo').addEventListener('click',()=>{menu.remove();redo();});
@@ -1105,15 +1106,19 @@ window.addEventListener('mouseup',()=>{if(reorderDrag){finishReorderDrag();}bloc
 
 document.getElementById('np-addbtn').addEventListener('click',()=>{snapshot();N.push({id:nid(),name:'New project',ci:N.length%PC.length,blocks:[]});renderNextPanel();document.getElementById('np-count').textContent=N.length;saveState();});
 
-const _urlPlanId=new URLSearchParams(window.location.search).get('plan');
+const _urlPlanId=new URLSearchParams(window.location.search).get('plan')||EMBEDDED_PLAN_ID;
 if(_urlPlanId){
  cloudLoad(_urlPlanId).then(loaded=>{
-  if(loaded){render();requestAnimationFrame(render);}
-  else{loadState();render();requestAnimationFrame(render);}
+  if(loaded){
+   // Keep URL in sync if loaded from embedded ID
+   const url=new URL(window.location.href);
+   url.searchParams.set('plan',_urlPlanId);
+   window.history.replaceState({},'',url.toString());
+   render();requestAnimationFrame(render);
+  }else{loadState();render();requestAnimationFrame(render);}
  });
 }else{
  loadState();
- // Create a new plan in Supabase so the URL is always shareable
  sbRequest('POST','/rest/v1/plans',{title:planTitle,data:{P,N,S,planTitle,uid}})
   .then(result=>{
    cloudPlanId=result[0].id;
@@ -1129,7 +1134,6 @@ document.addEventListener('keydown',e=>{
  const mod=e.metaKey||e.ctrlKey;
  if(mod&&e.key==='z'&&!e.shiftKey){e.preventDefault();undo();}
  if(mod&&(e.key==='Z'||e.key==='y'||(e.key==='z'&&e.shiftKey))){e.preventDefault();redo();}
- if(mod&&e.key==='s'&&supportsFS){e.preventDefault();fileSave();}
 });
 </script>
 </body>
