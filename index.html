@@ -455,19 +455,20 @@ function openEdit(bid,blkEl){
  document.getElementById('be-computed').textContent=`${Math.round(pps)} pts/sp \u00b7 ${(pps/S.pointsPerDev).toFixed(1)} devs`;
  const canvas=document.getElementById('pl-canvas'),cr=canvas.getBoundingClientRect(),br=blkEl.getBoundingClientRect();
  const ed=document.getElementById('blk-edit');
- // Initial position: below and left-aligned to block
  ed.style.cssText='display:flex;top:0;left:0;visibility:hidden;';
- // Measure after display so we know popover dimensions
  const edW=ed.offsetWidth||200,edH=ed.offsetHeight||100;
- const vw=window.innerWidth,vh=window.innerHeight;
- // Preferred: below block
+ // Use the scroll container's visible bounds, not window width
+ const plCw=document.getElementById('pl-cw');
+ const plCwR=plCw.getBoundingClientRect();
+ const visRight=plCwR.right; // right edge of visible scroll area
+ const vh=window.innerHeight;
+ // Preferred: below block, left-aligned
  let top=br.bottom-cr.top+6;
  let left=br.left-cr.left;
- // Flip above if would overflow bottom
+ // Flip above if would overflow bottom of viewport
  if(br.bottom+edH+6>vh) top=br.top-cr.top-edH-6;
- // Flip right-align if would overflow right
- if(br.left+edW>vw) left=br.right-cr.left-edW;
- // Clamp to canvas bounds
+ // Flip left if popover would go beyond visible right edge
+ if(br.left+edW>visRight) left=br.right-cr.left-edW;
  top=Math.max(0,top);
  left=Math.max(0,left);
  ed.style.cssText=`display:flex;top:${top}px;left:${left}px;visibility:visible;`;
